@@ -568,7 +568,7 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
   ///
   /// Dispatches an [ObjectDrawableNotification] that the object was tapped.
   void tapDrawable(ObjectDrawable drawable) {
-    if (drawable.locked) return;
+    // if (drawable.locked) return;
 
     if (controller?.selectedObjectDrawable == drawable) {
       ObjectDrawableReselectedNotification(drawable).dispatch(context);
