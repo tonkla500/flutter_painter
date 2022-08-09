@@ -149,6 +149,8 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
           ...drawables.asMap().entries.map((entry) {
             final drawable = entry.value;
             final selected = drawable == controller?.selectedObjectDrawable;
+            final isLocked =
+                controller?.selectedObjectDrawable?.locked ?? false;
             final size = drawable.getSize(maxWidth: constraints.maxWidth);
             final widget = Padding(
               padding: EdgeInsets.all(objectPadding),
@@ -182,7 +184,7 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                             onScaleEnd: (_) => onDrawableScaleEnd(entry),
                             child: AnimatedSwitcher(
                               duration: controlsTransitionDuration,
-                              child: selected
+                              child: selected && !isLocked
                                   ? Stack(
                                       children: [
                                         widget,
