@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_painter/src/controllers/notifications/drawable_double_tap_notification.dart';
+import 'package:flutter_painter/src/controllers/notifications/drawable_long_press_notification.dart';
 import '../../controllers/events/selected_object_drawable_removed_event.dart';
 import '../../controllers/helpers/renderer_check/renderer_check.dart';
 import '../../controllers/drawables/drawable.dart';
@@ -33,6 +35,10 @@ typedef DrawableCreatedCallback = Function(Drawable drawable);
 
 typedef DrawableDeletedCallback = Function(Drawable drawable);
 
+typedef DrawableOnDoubleTapCallback = Function(Drawable drawable);
+
+typedef DrawableLongPressCallback = Function(Drawable drawable);
+
 /// Defines the builder used with [FlutterPainter.builder] constructor.
 typedef FlutterPainterBuilderCallback = Widget Function(
     BuildContext context, Widget painter);
@@ -50,6 +56,10 @@ class FlutterPainter extends StatelessWidget {
 
   /// Callback when the selected [ObjectDrawable] changes.
   final ValueChanged<ObjectDrawable?>? onSelectedObjectDrawableChanged;
+
+  final DrawableOnDoubleTapCallback? onDoubleTabSelectedObjectDrawable;
+
+  final DrawableLongPressCallback? onLongPressObjectDrawable;
 
   /// Callback when the [PainterSettings] of [PainterController] are updated internally.
   final ValueChanged<PainterSettings>? onPainterSettingsChanged;
@@ -69,7 +79,9 @@ class FlutterPainter extends StatelessWidget {
       this.onDrawableCreated,
       this.onDrawableDeleted,
       this.onSelectedObjectDrawableChanged,
-      this.onPainterSettingsChanged})
+      this.onPainterSettingsChanged,
+      this.onDoubleTabSelectedObjectDrawable,
+      this.onLongPressObjectDrawable})
       : _builder = _defaultBuilder,
         super(key: key);
 
@@ -84,7 +96,9 @@ class FlutterPainter extends StatelessWidget {
       this.onDrawableCreated,
       this.onDrawableDeleted,
       this.onSelectedObjectDrawableChanged,
-      this.onPainterSettingsChanged})
+      this.onPainterSettingsChanged,
+      this.onDoubleTabSelectedObjectDrawable,
+      this.onLongPressObjectDrawable})
       : _builder = builder,
         super(key: key);
 
@@ -103,6 +117,9 @@ class FlutterPainter extends StatelessWidget {
                   onDrawableCreated: onDrawableCreated,
                   onDrawableDeleted: onDrawableDeleted,
                   onPainterSettingsChanged: onPainterSettingsChanged,
+                  onDoubleTabSelectedObjectDrawable:
+                      onDoubleTabSelectedObjectDrawable,
+                  onLongPressObjectDrawable: onLongPressObjectDrawable,
                   onSelectedObjectDrawableChanged:
                       onSelectedObjectDrawableChanged,
                 ));
@@ -127,6 +144,10 @@ class _FlutterPainterWidget extends StatelessWidget {
   /// Callback when a [Drawable] is deleted internally in [FlutterPainter].
   final DrawableDeletedCallback? onDrawableDeleted;
 
+  final DrawableOnDoubleTapCallback? onDoubleTabSelectedObjectDrawable;
+
+  final DrawableLongPressCallback? onLongPressObjectDrawable;
+
   /// Callback when the selected [ObjectDrawable] changes.
   final ValueChanged<ObjectDrawable?>? onSelectedObjectDrawableChanged;
 
@@ -140,7 +161,9 @@ class _FlutterPainterWidget extends StatelessWidget {
       this.onDrawableCreated,
       this.onDrawableDeleted,
       this.onSelectedObjectDrawableChanged,
-      this.onPainterSettingsChanged})
+      this.onPainterSettingsChanged,
+      this.onDoubleTabSelectedObjectDrawable,
+      this.onLongPressObjectDrawable})
       : super(key: key);
 
   @override
@@ -197,6 +220,10 @@ class _FlutterPainterWidget extends StatelessWidget {
       onSelectedObjectDrawableChanged?.call(notification.drawable);
     } else if (notification is SettingsUpdatedNotification) {
       onPainterSettingsChanged?.call(notification.settings);
+    } else if (notification is DrawableLongPressNotification) {
+      onLongPressObjectDrawable?.call(notification.drawable);
+    } else if (notification is DrawableDoubleTapNotification) {
+      onDoubleTabSelectedObjectDrawable?.call(notification.drawable);
     }
     return true;
   }

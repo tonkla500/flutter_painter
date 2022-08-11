@@ -177,6 +177,8 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () => tapDrawable(drawable),
+                            onDoubleTap: () => doubleTapDrawable(drawable),
+                            onLongPress: () => longPressDrawable(drawable),
                             onScaleStart: (details) =>
                                 onDrawableScaleStart(entry, details),
                             onScaleUpdate: (details) =>
@@ -577,6 +579,28 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
     } else {
       SelectedObjectDrawableUpdatedNotification(drawable).dispatch(context);
     }
+
+    setState(() {
+      // selectedDrawableIndex = drawables.indexOf(drawable);
+      controller?.selectObjectDrawable(drawable);
+    });
+  }
+
+  void longPressDrawable(ObjectDrawable drawable) {
+    // if (drawable.locked) return;
+
+    DrawableLongPressNotification(drawable).dispatch(context);
+
+    setState(() {
+      // selectedDrawableIndex = drawables.indexOf(drawable);
+      controller?.selectObjectDrawable(drawable);
+    });
+  }
+
+  void doubleTapDrawable(ObjectDrawable drawable) {
+    // if (drawable.locked) return;
+
+    DrawableDoubleTapNotification(drawable).dispatch(context);
 
     setState(() {
       // selectedDrawableIndex = drawables.indexOf(drawable);
