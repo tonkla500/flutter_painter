@@ -589,7 +589,11 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
   void longPressDrawable(ObjectDrawable drawable) {
     // if (drawable.locked) return;
 
-    DrawableLongPressNotification(drawable).dispatch(context);
+    if (controller?.selectedObjectDrawable == drawable) {
+      ObjectDrawableReselectedNotification(drawable).dispatch(context);
+    } else {
+      DrawableLongPressNotification(drawable).dispatch(context);
+    }
 
     setState(() {
       // selectedDrawableIndex = drawables.indexOf(drawable);
@@ -599,9 +603,11 @@ class _ObjectWidgetState extends State<_ObjectWidget> {
 
   void doubleTapDrawable(ObjectDrawable drawable) {
     // if (drawable.locked) return;
-
-    DrawableDoubleTapNotification(drawable).dispatch(context);
-
+    if (controller?.selectedObjectDrawable == drawable) {
+      ObjectDrawableReselectedNotification(drawable).dispatch(context);
+    } else {
+      DrawableDoubleTapNotification(drawable).dispatch(context);
+    }
     setState(() {
       // selectedDrawableIndex = drawables.indexOf(drawable);
       controller?.selectObjectDrawable(drawable);
