@@ -244,7 +244,8 @@ class EditTextWidgetState extends State<EditTextWidget>
           padding: EdgeInsets.only(
               bottom: (keyboardHeight - (screenHeight - height - y))
                   .clamp(0, screenHeight)),
-          child: Center(
+          child: Align(
+            alignment: Alignment.topCenter,
             child: TextField(
               decoration: const InputDecoration(
                 border: InputBorder.none,
